@@ -15,8 +15,15 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+
+    // デバッグ用：エラーレスポンスをログに出力
+    if (!response.ok) {
+      console.error('Anthropic API error:', response.status, JSON.stringify(data));
+    }
+
     res.status(response.status).json(data);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Handler error:', error);
+    res.status(500).json({ error: 'Internal server error', detail: error.message });
   }
 }
